@@ -5,15 +5,17 @@
     <title>World Cup 2014</title>
     <link rel="stylesheet"
           type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <style>[ng-cloak] { display: none; }</style>
 </head>
 <body ng-app="App">
     <div class="container" ng-controller="MatchCtrl">
         <div class="jumbotron">
+            <input class="pull-right col-md-4" type="text" ng-model="name" />
+            <label class="pull-right">Name:</label>
             <h1>World Cup 2014</h1>
         </div>
-        <div class="row">
+        <div class="row" ng-cloak>
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                <p class="lead">Matches</p>
                 <table class="table">
                     <tr>
                         <th>Date</th>
@@ -32,7 +34,7 @@
                         <td>{{item.stadium}}</td>
                         <td>{{item.channel}}</td>
                         <td>
-                            <select>
+                            <select ng-model="item.result" ng-change="optionChanged()">
                                 <option></option>
                                 <option>1</option>
                                 <option>X</option>
@@ -50,12 +52,50 @@
     <script>
         var app = angular.module('App', []);
 
+        app.factory(
+            'Storage',
+            function () {
+                var STORAGE_ID = "SoccerBets-WorldCup-2014";
+                var MATCHES_ID = STORAGE_ID + "-Matches";
+                var NAME_ID = STORAGE_ID + "-Name";
+
+                return {
+                    getMatches: function (defaultMatches) {
+                        var stored = localStorage.getItem(MATCHES_ID);
+                        if (stored) return JSON.parse(stored);
+                        return defaultMatches;
+                    },
+                    putMatches: function (matches) {
+                        localStorage.setItem(MATCHES_ID, JSON.stringify(matches));
+                    },
+                    getName: function (defaultName) {
+                        var stored = localStorage.getItem(NAME_ID);
+                        if (stored) return JSON.parse(stored).name;
+                        return defaultName;
+                    },
+                    setName: function (name) {
+                        localStorage.setItem(NAME_ID, JSON.stringify({ name: name }));
+                    }
+                };
+        });
+
         app.controller(
             'MatchCtrl',
             [
                 '$scope',
-                function ($scope) {
-                    $scope.matches = [
+                'Storage',
+                function ($scope, storage) {
+                    $scope.name = storage.getName('');
+
+                    $scope.$watch('name', function (name) {
+                        storage.setName(name);
+                    });
+
+                    $scope.optionChanged = function () {
+                        storage.putMatches($scope.matches);
+                    };
+
+                    $scope.matches = storage.getMatches([
                         {
                             date: '12-jun',
                             time: '22:00',
@@ -457,9 +497,9 @@
 12-jul  22.00   Bronsmatch  BRASILIA    svt
 13-jul  21.00   Final   RIO DE JANEIRO  TV4
 */
-                    ];
-                }])
-
+                    ]);
+                    }]);
     </script>
+    <script src="http://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
 </body>
 </html>

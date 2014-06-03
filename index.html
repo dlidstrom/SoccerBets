@@ -2,19 +2,23 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
     <title>World Cup 2014</title>
     <link rel="stylesheet"
           type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style>[ng-cloak] { display: none; }</style>
 </head>
 <body ng-app="App">
-    <div class="container" ng-controller="MatchCtrl">
-        <div class="jumbotron">
+    <div class="container" ng-controller="MatchCtrl" ng-cloak>
+        <div class="jumbotron" ng-controller="JumboCtrl">
             <input class="pull-right col-md-4" type="text" ng-model="name" />
             <label class="pull-right">Name:</label>
             <h1>World Cup 2014</h1>
+            <p>Varje rätt ger 1 poäng. Gissa finalens vinnare för 6 extra poäng.</p>
+            <p>Insats: 100:-. 50% av insatserna går till 1:an, 30% går till 2:an och 20% till 3:an.</p>
+            <span>Tiden går ut fredag 13/6 12:00, {{timeLeft}}.</span>
         </div>
-        <div class="row" ng-cloak>
+        <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
                 <table class="table">
                     <tr>
@@ -45,6 +49,19 @@
                 </table>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                <div class="form-group">
+                        <label class="control-label">Vinnare</input>
+                        <select class="form-control"
+                                ng-model="winner"
+                                ng-options="t.name for t in teams">
+                            <option value=''>-- Välj finalens vinnare --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js">
@@ -58,6 +75,7 @@
                 var STORAGE_ID = "SoccerBets-WorldCup-2014";
                 var MATCHES_ID = STORAGE_ID + "-Matches";
                 var NAME_ID = STORAGE_ID + "-Name";
+                var WINNER_ID = STORAGE_ID + "-Winner";
 
                 return {
                     getMatches: function (defaultMatches) {
@@ -75,9 +93,34 @@
                     },
                     setName: function (name) {
                         localStorage.setItem(NAME_ID, JSON.stringify({ name: name }));
+                    },
+                    getWinner: function (defaultWinner) {
+                        var stored = localStorage.getItem(WINNER_ID);
+                        if (stored) return JSON.parse(stored);
+                        return null;
+                    },
+                    setWinner: function (winner) {
+                        localStorage.setItem(WINNER_ID, JSON.stringify(winner));
                     }
                 };
         });
+
+        app.controller(
+            'JumboCtrl',
+            [
+                '$scope',
+                '$timeout',
+                function ($scope, $timeout) {
+                    var formatDate = function () {
+                        var DEADLINE = '2014-06-13T12:00';
+                        $scope.timeLeft = moment(DEADLINE).fromNow();
+                        $timeout(formatDate, 1000);
+                    };
+
+                    // start things off
+                    formatDate();
+                }
+            ]);
 
         app.controller(
             'MatchCtrl',
@@ -89,6 +132,10 @@
 
                     $scope.$watch('name', function (name) {
                         storage.setName(name);
+                    });
+
+                    $scope.$watch('winner', function (winner) {
+                        if (winner) storage.setWinner(winner);
                     });
 
                     $scope.optionChanged = function () {
@@ -498,8 +545,27 @@
 13-jul  21.00   Final   RIO DE JANEIRO  TV4
 */
                     ]);
-                    }]);
+
+                $scope.teams = _($scope.matches)
+                    .uniq('homeTeam')
+                    .pluck('homeTeam')
+                    .sort()
+                    .map(function (n) {
+                        return { name: n };
+                    })
+                    .value();
+                var storedWinner = storage.getWinner('');
+                if (storedWinner) {
+                    $scope.winner = _($scope.teams)
+                        .find(function (t) {
+                            return t.name === storedWinner.name;
+                        });
+                }
+            }]);
     </script>
     <script src="http://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/lang/sv.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 </body>
 </html>

@@ -16,7 +16,7 @@
             <h1>World Cup 2014</h1>
             <p>Varje rätt ger 1 poäng. Gissa finalens vinnare för 6 extra poäng.</p>
             <p>Insats: 100:-. 50% av insatserna går till 1:an, 30% går till 2:an och 20% till 3:an.</p>
-            <span>Tiden går ut fredag 13/6 12:00, {{timeLeft}}.</span>
+            <span>Tiden går ut {{deadline}}, {{timeLeft}}.</span>
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
@@ -38,12 +38,17 @@
                         <td>{{item.stadium}}</td>
                         <td>{{item.channel}}</td>
                         <td>
-                            <select ng-model="item.result" ng-change="optionChanged()">
-                                <option></option>
-                                <option>1</option>
-                                <option>X</option>
-                                <option>2</option>
-                            </select>
+                            <div ng-switch="deadlinePassed()">
+                                <span ng-switch-when="true">{{item.result}}</span>
+                                <select ng-model="item.result"
+                                        ng-switch-when="false"
+                                        ng-change="optionChanged()">
+                                    <option></option>
+                                    <option>1</option>
+                                    <option>X</option>
+                                    <option>2</option>
+                                </select>
+                            </div>
                         </td>
                     </tr>
                 </table>
@@ -51,13 +56,18 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                <div class="form-group">
-                        <label class="control-label">Vinnare</input>
-                        <select class="form-control"
-                                ng-model="winner"
-                                ng-options="t.name for t in teams">
-                            <option value=''>-- Välj finalens vinnare --</option>
-                        </select>
+                <div class="form-group form-horizontal">
+                        <label class="control-label">Vinnare:</input>
+                        <div ng-switch="deadlinePassed()">
+                            <span ng-switch-when="true">{{winner.name}}</span>
+                            <select class="form-control"
+                                    ng-model="winner"
+                                    ng-switch-when="false"
+                                    ng-change="winnerChanged(winner)"
+                                    ng-options="t.name for t in teams">
+                                <option value=''>-- Välj finalens vinnare --</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -66,9 +76,14 @@
     <script type="text/javascript"
             src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js">
     </script>
+    <script src="http://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/lang/sv.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script>
         var app = angular.module('App', []);
 
+        app.constant('DEADLINE', moment('2014-06-13T12:00'));
         app.factory(
             'Storage',
             function () {
@@ -100,7 +115,8 @@
                         return null;
                     },
                     setWinner: function (winner) {
-                        localStorage.setItem(WINNER_ID, JSON.stringify(winner));
+                        if (winner) localStorage.setItem(WINNER_ID, JSON.stringify(winner));
+                        else localStorage.removeItem(WINNER_ID);
                     }
                 };
         });
@@ -110,10 +126,11 @@
             [
                 '$scope',
                 '$timeout',
-                function ($scope, $timeout) {
+                'DEADLINE',
+                function ($scope, $timeout, deadline) {
+                    $scope.deadline = deadline.format('llll');
                     var formatDate = function () {
-                        var DEADLINE = '2014-06-13T12:00';
-                        $scope.timeLeft = moment(DEADLINE).fromNow();
+                        $scope.timeLeft = deadline.fromNow();
                         $timeout(formatDate, 1000);
                     };
 
@@ -127,16 +144,21 @@
             [
                 '$scope',
                 'Storage',
-                function ($scope, storage) {
+                'DEADLINE',
+                function ($scope, storage, deadline) {
+                    $scope.deadlinePassed = function () {
+                        return deadline.isBefore();
+                    };
+
                     $scope.name = storage.getName('');
 
                     $scope.$watch('name', function (name) {
                         storage.setName(name);
                     });
 
-                    $scope.$watch('winner', function (winner) {
-                        if (winner) storage.setWinner(winner);
-                    });
+                    $scope.winnerChanged = function (winner) {
+                        storage.setWinner(winner);
+                    };
 
                     $scope.optionChanged = function () {
                         storage.putMatches($scope.matches);
@@ -563,9 +585,5 @@
                 }
             }]);
     </script>
-    <script src="http://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/lang/sv.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
 </body>
 </html>

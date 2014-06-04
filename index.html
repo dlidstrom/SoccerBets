@@ -6,36 +6,117 @@
     <title>World Cup 2014</title>
     <link rel="stylesheet"
           type="text/css" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-    <style>[ng-cloak] { display: none; }</style>
+    <style>
+      [ng-cloak] { display: none; }
+      [class^="flag-"],
+      [class*=" flag-"] {
+          background: url(csg-538f7ae988d6d.png) no-repeat top left;
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 4px;
+      }
+      .flag-alg{ background-position: 0 0; width: 34px; height: 22px; } 
+      .flag-arg{ background-position: 0 -72px; width: 34px; height: 22px; } 
+      .flag-aus{ background-position: 0 -144px; width: 34px; height: 22px; } 
+      .flag-bel{ background-position: 0 -216px; width: 34px; height: 22px; } 
+      .flag-bih{ background-position: 0 -288px; width: 34px; height: 22px; } 
+      .flag-bra{ background-position: 0 -360px; width: 34px; height: 22px; } 
+      .flag-chi{ background-position: 0 -432px; width: 34px; height: 22px; } 
+      .flag-civ{ background-position: 0 -504px; width: 34px; height: 22px; } 
+      .flag-cmr{ background-position: 0 -576px; width: 34px; height: 22px; } 
+      .flag-col{ background-position: 0 -648px; width: 34px; height: 22px; } 
+      .flag-crc{ background-position: 0 -720px; width: 34px; height: 22px; } 
+      .flag-cro{ background-position: 0 -792px; width: 34px; height: 22px; } 
+      .flag-ecu{ background-position: 0 -864px; width: 34px; height: 22px; } 
+      .flag-eng{ background-position: 0 -936px; width: 34px; height: 22px; } 
+      .flag-esp{ background-position: 0 -1008px; width: 34px; height: 22px; } 
+      .flag-fra{ background-position: 0 -1080px; width: 34px; height: 22px; } 
+      .flag-ger{ background-position: 0 -1152px; width: 34px; height: 22px; } 
+      .flag-gha{ background-position: 0 -1224px; width: 34px; height: 22px; } 
+      .flag-gre{ background-position: 0 -1296px; width: 34px; height: 22px; } 
+      .flag-hon{ background-position: 0 -1368px; width: 34px; height: 22px; } 
+      .flag-irn{ background-position: 0 -1440px; width: 34px; height: 22px; } 
+      .flag-ita{ background-position: 0 -1512px; width: 34px; height: 22px; } 
+      .flag-jpn{ background-position: 0 -1584px; width: 34px; height: 22px; } 
+      .flag-kor{ background-position: 0 -1656px; width: 34px; height: 22px; } 
+      .flag-mex{ background-position: 0 -1728px; width: 34px; height: 22px; } 
+      .flag-ned{ background-position: 0 -1800px; width: 34px; height: 22px; } 
+      .flag-nga{ background-position: 0 -1872px; width: 34px; height: 22px; } 
+      .flag-por{ background-position: 0 -1944px; width: 34px; height: 22px; } 
+      .flag-rus{ background-position: -84px 0; width: 34px; height: 22px; } 
+      .flag-sui{ background-position: -84px -72px; width: 34px; height: 22px; } 
+      .flag-uru{ background-position: -84px -144px; width: 34px; height: 22px; } 
+      .flag-usa{ background-position: -84px -216px; width: 34px; height: 22px; } 
+      .red { color: red; }
+    </style>
 </head>
 <body ng-app="App">
     <div class="container" ng-controller="MatchCtrl" ng-cloak>
         <div class="jumbotron" ng-controller="JumboCtrl">
+          <i class="flag-ned pull-left"></i>
+          <i class="flag-alg"></i>
+          <i class="flag-arg"></i>
+          <i class="flag-aus"></i>
+          <i class="flag-bel"></i>
+          <i class="flag-bih"></i>
+          <i class="flag-bra"></i>
+          <i class="flag-chi"></i>
+          <i class="flag-civ"></i>
+          <i class="flag-cmr"></i>
+          <i class="flag-col"></i>
+          <i class="flag-crc"></i>
+          <i class="flag-cro"></i>
+          <i class="flag-ecu"></i>
+          <i class="flag-eng"></i>
+          <i class="flag-esp"></i>
+          <i class="flag-fra"></i>
+          <i class="flag-ger"></i>
+          <i class="flag-gha"></i>
+          <i class="flag-gre"></i>
+          <i class="flag-hon"></i>
+          <i class="flag-irn"></i>
+          <i class="flag-ita"></i>
+          <i class="flag-jpn"></i>
+          <i class="flag-kor"></i>
+          <i class="flag-mex"></i>
+          <i class="flag-ned"></i>
+          <i class="flag-nga"></i>
+          <i class="flag-por"></i>
+          <i class="flag-rus"></i>
+          <i class="flag-sui"></i>
+          <i class="flag-uru"></i>
+          <i class="flag-usa"></i>
+          <div class="clearfix"></div>
             <input class="pull-right col-md-4" type="text" ng-model="name" />
-            <label class="pull-right">Name:</label>
-            <h1>World Cup 2014</h1>
-            <p>Varje rätt ger 1 poäng. Gissa finalens vinnare för 6 extra poäng.</p>
-            <p>Insats: 100:-. 50% av insatserna går till 1:an, 30% går till 2:an och 20% till 3:an.</p>
-            <span>Tiden går ut {{deadline}}, {{timeLeft}}.</span>
+            <label class="pull-right">Namn:</label>
+            <h1>Fotbolls-VM 2014</h1>
+            <p>1 poäng för varje rätt svar. Gissa slutgiltiga vinnare för 6 extra poäng.</p>
+            <p>Insats: 100 :-. 1:an får 50% av insatserna, 2:a plats får 30% och 3:an får 20%.</p>
+            <span>
+              <i class="glyphicon glyphicon-info-sign red"></i>
+              Tiden går ut {{deadline}}, {{timeLeft}}.
+            </span>
         </div>
         <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+            <div class="col-xs-12">
                 <table class="table">
                     <tr>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Home Team</th>
-                        <th>Away Team</th>
-                        <th>Arena</th>
-                        <th>Channel</th>
-                        <th>Result</th>
+                        <th>Datum</th>
+                        <th>Hemmalag</th>
+                        <th>Bortalag</th>
+                        <th>Kanal</th>
+                        <th>Resultat</th>
                     </tr>
                     <tr ng-repeat="item in matches">
-                        <td>{{item.date}}</td>
-                        <td>{{item.time}}</td>
-                        <td>{{item.homeTeam}}</td>
-                        <td>{{item.awayTeam}}</td>
-                        <td>{{item.stadium}}</td>
+                        <td>{{item.date}} - {{item.time}}</td>
+                        <td>
+                          <i ng-class="className(item.homeTeam)"></i>
+                          {{item.homeTeam}}
+                        </td>
+                        <td>
+                          <i ng-class="className(item.awayTeam)"></i>
+                          {{item.awayTeam}}
+                        </td>
                         <td>{{item.channel}}</td>
                         <td>
                             <div ng-switch="deadlinePassed()">
@@ -146,6 +227,20 @@
                 'Storage',
                 'DEADLINE',
                 function ($scope, storage, deadline) {
+                    $scope.className = function (team) {
+                      if (team === "South Korea") team = "kor";
+                      else if (team === "Holland") team = "ned";
+                      else if (team === "Cameroon") team = "cmr";
+                      else if (team === "Spain") team = "esp";
+                      else if (team === "Ivory Coast") team = "civ";
+                      else if (team === "Schweiz") team = "sui";
+                      else if (team === "Iran") team = "irn";
+                      else if (team === "Japan") team = "jpn";
+                      else if (team === "Nigeria") team = "nga";
+                      else if (team === "Costa Rica") team = "crc";
+                      else if (team === "Bosnia") team = "bih";
+                      return 'flag-' + team.substring(0, 3).toLowerCase();
+                    };
                     $scope.deadlinePassed = function () {
                         return deadline.isBefore();
                     };

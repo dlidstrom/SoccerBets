@@ -109,11 +109,11 @@
                     </tr>
                     <tr ng-repeat="item in matches">
                         <td>{{item.date}} - {{item.time}}</td>
-                        <td>
+                        <td ng-class="{danger: item.result == 1, info: item.result == 'X'}">
                           <i ng-class="className(item.homeTeam)"></i>
                           {{item.homeTeam}}
                         </td>
-                        <td>
+                        <td ng-class="{danger: item.result == 2, info: item.result == 'X'}">
                           <i ng-class="className(item.awayTeam)"></i>
                           {{item.awayTeam}}
                         </td>

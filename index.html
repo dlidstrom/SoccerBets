@@ -12,7 +12,22 @@
     </style>
 </head>
 <body ng-app="App">
-    <div class="container" ng-controller="MatchCtrl" ng-cloak>
+    <div class="container" ng-cloak>
+        <div class="row" ng-controller="AuthCtrl as auth" ng-init="auth.loggedIn = false">
+            <div class="col-xs-12">
+                <button type="button"
+                        ng-hide="auth.auth.user"
+                        ng-click="auth.auth.$login('google')"
+                        class="btn btn-primary">Logga in med Google</button>
+                <button type="button"
+                        ng-hide="auth.auth.user"
+                        ng-click="auth.auth.$login('facebook')"
+                        class="btn btn-primary">Logga in med Facebook</button>
+                <span ng-show="auth.auth.user">
+                    {{auth.auth.user.displayName}} | <a href="#" ng-click="auth.auth.$logout()">Logga ut</a>
+                </span>
+            </div>
+        </div>
         <div class="jumbotron" ng-controller="JumboCtrl">
             <i class="flag-alg pull-left"></i>
             <i class="flag-arg"></i>
@@ -53,11 +68,11 @@
             <p>1 poäng för varje rätt svar. Gissa slutgiltig vinnare för 6 extra poäng.</p>
             <p>Insats: 100 :-. 1:a plats får 50% av insatserna, 2:a plats får 30% och 3:e plats får 20%.</p>
             <span>
-              <i class="glyphicon glyphicon-info-sign red"></i>
-              Tiden går ut {{deadline}}, {{timeLeft}}.
+                <i class="glyphicon glyphicon-info-sign red"></i>
+                Tiden går ut {{deadline}}, {{timeLeft}}.
             </span>
         </div>
-        <div class="row">
+        <div class="row" ng-controller="MatchCtrl">
             <div class="col-xs-12">
                 <table class="table">
                     <tr>
@@ -115,13 +130,17 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    <script src="http://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/lang/sv.js"></script>
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/json3/3.3.1/json3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.6.0/lang/sv.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.6/firebase.js"></script>
+    <script src='https://cdn.firebase.com/js/simple-login/1.5.0/firebase-simple-login.js'></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.7.1/angularfire.min.js"></script>
     <script src="javascripts/main.js"></script>
     <script src="javascripts/Storage.js"></script>
     <script src="javascripts/JumboCtrl.js"></script>
     <script src="javascripts/MainCtrl.js"></script>
+    <script src="javascripts/AuthCtrl.js"></script>
 </body>
 </html>

@@ -25,12 +25,6 @@
                     return deadline.isBefore();
                 };
 
-                $scope.name = storage.getName('');
-
-                $scope.$watch('name', function (name) {
-                    storage.setName(name);
-                });
-
                 $scope.winnerChanged = function (winner) {
                     storage.setWinner(winner);
                 };

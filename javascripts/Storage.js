@@ -9,21 +9,13 @@
             var WINNER_ID = STORAGE_ID + "-Winner";
 
             return {
-                getMatches: function (defaultMatches) {
+                getMatches: function () {
                     var stored = localStorage.getItem(MATCHES_ID);
                     if (stored) return JSON.parse(stored);
-                    return defaultMatches;
+                    return null;
                 },
-                putMatches: function (matches) {
-                    localStorage.setItem(MATCHES_ID, JSON.stringify(matches));
-                },
-                getName: function (defaultName) {
-                    var stored = localStorage.getItem(NAME_ID);
-                    if (stored) return JSON.parse(stored).name;
-                    return defaultName;
-                },
-                setName: function (name) {
-                    localStorage.setItem(NAME_ID, JSON.stringify({ name: name }));
+                removeMatches: function () {
+                    localStorage.removeItem(MATCHES_ID);
                 },
                 getWinner: function (defaultWinner) {
                     var stored = localStorage.getItem(WINNER_ID);

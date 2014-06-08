@@ -13,18 +13,14 @@
 </head>
 <body ng-app="App">
     <div class="container" ng-cloak>
-        <div class="row" ng-controller="AuthCtrl as auth" ng-init="auth.loggedIn = false">
+        <div class="row" ng-controller="AuthCtrl as auth">
             <div class="col-xs-12">
                 <button type="button"
-                        ng-hide="auth.auth.user"
-                        ng-click="auth.auth.$login('google')"
-                        class="btn btn-primary">Logga in med Google</button>
-                <button type="button"
-                        ng-hide="auth.auth.user"
-                        ng-click="auth.auth.$login('facebook')"
+                        ng-hide="user"
+                        ng-click="auth.login()"
                         class="btn btn-primary">Logga in med Facebook</button>
-                <span ng-show="auth.auth.user">
-                    {{auth.auth.user.displayName}} | <a href="#" ng-click="auth.auth.$logout()">Logga ut</a>
+                <span ng-show="user">
+                    {{user.displayName}} | <a href="#" ng-click="auth.logout()">Logga ut</a>
                 </span>
             </div>
         </div>
@@ -62,8 +58,6 @@
             <i class="flag-uru"></i>
             <i class="flag-usa"></i>
             <div class="clearfix"></div>
-            <input class="pull-right col-md-4" type="text" ng-model="name" />
-            <label class="pull-right">Namn:</label>
             <h1>Fotbolls-VM 2014</h1>
             <p>1 poäng för varje rätt svar. Gissa slutgiltig vinnare för 6 extra poäng.</p>
             <p>Insats: 100 :-. 1:a plats får 50% av insatserna, 2:a plats får 30% och 3:e plats får 20%.</p>
@@ -72,57 +66,59 @@
                 Tiden går ut {{deadline}}, {{timeLeft}}.
             </span>
         </div>
-        <div class="row" ng-controller="MatchCtrl">
-            <div class="col-xs-12">
-                <table class="table">
-                    <tr>
-                        <th>Datum</th>
-                        <th>Hemmalag</th>
-                        <th>Bortalag</th>
-                        <th>Kanal</th>
-                        <th>Resultat</th>
-                    </tr>
-                    <tr ng-repeat="item in matches">
-                        <td>{{item.date}} - {{item.time}}</td>
-                        <td ng-class="{danger: item.result == 1, info: item.result == 'X'}">
-                          <i ng-class="className(item.homeTeam)"></i>
-                          {{item.homeTeam}}
-                        </td>
-                        <td ng-class="{danger: item.result == 2, info: item.result == 'X'}">
-                          <i ng-class="className(item.awayTeam)"></i>
-                          {{item.awayTeam}}
-                        </td>
-                        <td>{{item.channel}}</td>
-                        <td>
+        <div ng-controller="MatchCtrl">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table">
+                        <tr>
+                            <th>Datum</th>
+                            <th>Hemmalag</th>
+                            <th>Bortalag</th>
+                            <th>Kanal</th>
+                            <th>Resultat</th>
+                        </tr>
+                        <tr ng-repeat="item in matches">
+                            <td>{{item.date}} - {{item.time}}</td>
+                            <td ng-class="{danger: item.result == 1, info: item.result == 'X'}">
+                              <i ng-class="className(item.homeTeam)"></i>
+                              {{item.homeTeam}}
+                            </td>
+                            <td ng-class="{danger: item.result == 2, info: item.result == 'X'}">
+                              <i ng-class="className(item.awayTeam)"></i>
+                              {{item.awayTeam}}
+                            </td>
+                            <td>{{item.channel}}</td>
+                            <td>
+                                <div ng-switch="deadlinePassed()">
+                                    <span ng-switch-when="true">{{item.result}}</span>
+                                    <select ng-model="item.result"
+                                            ng-switch-when="false"
+                                            ng-change="optionChanged($index, item.result)">
+                                        <option></option>
+                                        <option>1</option>
+                                        <option>X</option>
+                                        <option>2</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
+                    <div class="form-group form-horizontal">
+                            <label class="control-label">Vinnare:</input>
                             <div ng-switch="deadlinePassed()">
-                                <span ng-switch-when="true">{{item.result}}</span>
-                                <select ng-model="item.result"
+                                <span ng-switch-when="true">{{winner.name}}</span>
+                                <select class="form-control"
+                                        ng-model="winner"
                                         ng-switch-when="false"
-                                        ng-change="optionChanged()">
-                                    <option></option>
-                                    <option>1</option>
-                                    <option>X</option>
-                                    <option>2</option>
+                                        ng-change="winnerChanged(winner)"
+                                        ng-options="t.name for t in teams">
+                                    <option value=''>-- Välj finalens vinnare --</option>
                                 </select>
                             </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-                <div class="form-group form-horizontal">
-                        <label class="control-label">Vinnare:</input>
-                        <div ng-switch="deadlinePassed()">
-                            <span ng-switch-when="true">{{winner.name}}</span>
-                            <select class="form-control"
-                                    ng-model="winner"
-                                    ng-switch-when="false"
-                                    ng-change="winnerChanged(winner)"
-                                    ng-options="t.name for t in teams">
-                                <option value=''>-- Välj finalens vinnare --</option>
-                            </select>
                         </div>
                     </div>
                 </div>

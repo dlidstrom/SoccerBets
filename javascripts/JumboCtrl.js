@@ -16,12 +16,6 @@
 
                 // start things off
                 formatDate();
-
-                $scope.name = storage.getName('');
-
-                $scope.$watch('name', function (name) {
-                    storage.setName(name);
-                });
             }
         ]);
 })(window.App);
